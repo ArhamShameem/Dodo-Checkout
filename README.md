@@ -206,7 +206,7 @@ Cross-origin `postMessage` vulnerabilities often arise from wildcard targets (`"
 
 ### 1. Explicit Target Origin (No Wildcards)
 Neither the host SDK nor the checkout iframe ever broadcasts to `"*"`.
-* The SDK calculates the expected origin from `VITE_CHECKOUT_URL` (e.g. `http://localhost:5174`) and passes this explicitly as `targetOrigin`.
+* The SDK calculates the expected origin from `CHECKOUT_URL` (e.g. `http://localhost:5174`) and passes this explicitly as `targetOrigin`.
 * The checkout iframe extracts the parent's origin from `document.referrer` and locks it during the `checkout:init` handshake.
 
 ### 2. Strict Message Source & Window Verification
@@ -310,5 +310,5 @@ In a full commercial production environment, the following enhancements would be
 ## 13. Known Limitations
 
 * **Frontend-Only Scope:** There is no persistent database or backend server. Session IDs and authorization states exist purely in memory during the browser session.
-* **Localhost Origin Resolution:** In local development, the demo store defaults to port 5173 and checkout to port 5174. In production, these would be configured via production domain environment variables (`VITE_CHECKOUT_URL`).
+* **Localhost Origin Resolution:** In local development, the demo store defaults to port 5173 and checkout to port 5174. In production, these would be configured via production domain environment variables (`CHECKOUT_URL`).
 * **Focus Trap Complexity across Iframes:** Native browser keyboard focus trapping within an iframe modal requires coordinating `tab` key events across cross-origin iframe boundaries. The current implementation captures the `Escape` key and top-level navigation, but full cross-boundary tab trapping in pure vanilla iframes requires additional message coordinates.

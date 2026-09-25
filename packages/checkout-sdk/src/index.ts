@@ -19,7 +19,7 @@ export * from "./validator.js";
 
 interface CustomImportMeta {
   env?: {
-    VITE_CHECKOUT_URL?: string;
+    CHECKOUT_URL?: string;
     [key: string]: unknown;
   };
 }
@@ -59,8 +59,8 @@ function resolveCheckoutUrl(optionsUrl?: string, productId?: string): string {
   
   // Check build-time / runtime environment variable if available
   const customMeta = import.meta as unknown as CustomImportMeta;
-  if (!base && customMeta?.env?.VITE_CHECKOUT_URL) {
-    base = customMeta.env.VITE_CHECKOUT_URL;
+  if (!base && customMeta?.env?.CHECKOUT_URL) {
+    base = customMeta.env.CHECKOUT_URL;
   }
 
   if (!base) {

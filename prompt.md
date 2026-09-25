@@ -566,7 +566,7 @@ http://localhost:5174
 
 The SDK should read the checkout URL from:
 
-VITE_CHECKOUT_URL
+CHECKOUT_URL
 
 Do not hardcode production URLs.
 
