@@ -1,0 +1,26 @@
+{
+  "name": "dodo-checkout-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:demo": "npm run dev --workspace=@dodo/demo",
+    "dev:checkout": "npm run dev --workspace=@dodo/checkout",
+    "dev": "concurrently -n \"DEMO,CHECKOUT\" -c \"cyan,magenta\" \"npm run dev:demo\" \"npm run dev:checkout\"",
+    "build:sdk": "npm run build --workspace=@dodo/checkout-sdk",
+    "build:checkout": "npm run build --workspace=@dodo/checkout",
+    "build:demo": "npm run build --workspace=@dodo/demo",
+    "build": "npm run build:sdk && npm run build:checkout && npm run build:demo",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
