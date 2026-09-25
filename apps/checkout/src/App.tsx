@@ -27,6 +27,21 @@ export const App: React.FC = () => {
     if (parentOriginRef.current) {
       return parentOriginRef.current;
     }
+    // Check hostOrigin passed securely via URL query params by SDK
+    if (typeof window !== "undefined" && window.location?.search) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const hostOriginParam = params.get("hostOrigin");
+        if (hostOriginParam) {
+          const parsed = new URL(hostOriginParam).origin;
+          if (parsed && parsed !== "null") {
+            return parsed;
+          }
+        }
+      } catch {
+        // invalid URL param
+      }
+    }
     if (typeof document !== "undefined" && document.referrer) {
       try {
         const refOrigin = new URL(document.referrer).origin;

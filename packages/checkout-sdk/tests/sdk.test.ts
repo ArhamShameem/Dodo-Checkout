@@ -198,4 +198,44 @@ describe("DodoCheckout SDK", () => {
     expect(DodoCheckout.isOpen()).toBe(true);
     expect(onClose).not.toHaveBeenCalled();
   });
+
+  it("handles deployed production Vercel URL and enforces exact expectedOrigin matching", () => {
+    const onSuccess = vi.fn();
+    const deployedUrl = "https://dodo-checkout-production.vercel.app";
+
+    DodoCheckout.open({
+      productId: "prod_123",
+      checkoutUrl: deployedUrl,
+      onSuccess,
+    });
+
+    const iframe = document.getElementById(DOM_IDS.IFRAME) as HTMLIFrameElement;
+    expect(iframe.src).toContain(deployedUrl);
+    expect(iframe.src).toContain("hostOrigin=");
+
+    // 1. Message from localhost must be REJECTED because deployed URL is active
+    const localhostMessage = new MessageEvent("message", {
+      data: {
+        type: "checkout:success",
+        payload: { sessionId: "cs_unauthorized_local" },
+      },
+      origin: "http://localhost:5174",
+      source: iframe.contentWindow,
+    });
+    window.dispatchEvent(localhostMessage);
+    expect(onSuccess).not.toHaveBeenCalled();
+
+    // 2. Message from exact deployed origin must be ACCEPTED
+    const validDeployedMessage = new MessageEvent("message", {
+      data: {
+        type: "checkout:success",
+        payload: { sessionId: "cs_prod_session_999" },
+      },
+      origin: deployedUrl,
+      source: iframe.contentWindow,
+    });
+    window.dispatchEvent(validDeployedMessage);
+    expect(onSuccess).toHaveBeenCalledWith({ sessionId: "cs_prod_session_999" });
+  });
 });
+

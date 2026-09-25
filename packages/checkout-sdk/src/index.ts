@@ -17,11 +17,15 @@ export * from "./types.js";
 export * from "./constants.js";
 export * from "./validator.js";
 
-interface CustomImportMeta {
-  env?: {
-    CHECKOUT_URL?: string;
+declare global {
+  interface ImportMetaEnv {
+    readonly VITE_CHECKOUT_URL?: string;
     [key: string]: unknown;
-  };
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
 }
 
 /**
@@ -55,12 +59,11 @@ const state: SDKState = {
  * Resolves the target checkout URL based on options or environment configuration.
  */
 function resolveCheckoutUrl(optionsUrl?: string, productId?: string): string {
-  let base = optionsUrl;
+  let base = optionsUrl?.trim() || undefined;
   
   // Check build-time / runtime environment variable if available
-  const customMeta = import.meta as unknown as CustomImportMeta;
-  if (!base && customMeta?.env?.CHECKOUT_URL) {
-    base = customMeta.env.CHECKOUT_URL;
+  if (!base && typeof import.meta !== "undefined" && import.meta.env?.VITE_CHECKOUT_URL) {
+    base = import.meta.env.VITE_CHECKOUT_URL.trim();
   }
 
   if (!base) {
@@ -68,9 +71,12 @@ function resolveCheckoutUrl(optionsUrl?: string, productId?: string): string {
   }
 
   try {
-    const url = new URL(base, window.location.href);
+    const url = new URL(base, typeof window !== "undefined" ? window.location.href : undefined);
     if (productId) {
       url.searchParams.set("productId", productId);
+    }
+    if (typeof window !== "undefined" && window.location?.origin) {
+      url.searchParams.set("hostOrigin", window.location.origin);
     }
     return url.toString();
   } catch {

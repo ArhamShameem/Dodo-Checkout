@@ -44,7 +44,7 @@ export const App: React.FC = () => {
 
     DodoCheckout.open({
       productId: "prod_123",
-      // Optional explicit checkoutUrl, defaults to CHECKOUT_URL or http://localhost:5174
+      checkoutUrl: import.meta.env?.VITE_CHECKOUT_URL,
       onSuccess: ({ sessionId }) => {
         addLog(`payment success — session: ${sessionId}`, "success", {
           sessionId,
