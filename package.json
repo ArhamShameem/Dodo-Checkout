@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "dev:demo": "npm run dev --workspace=@dodo/demo",

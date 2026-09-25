@@ -114,6 +114,28 @@ Individual workspace build commands:
 
 ---
 
+## 5.1 Vercel Deployment Configuration
+
+When deploying this npm-workspaces monorepo to Vercel, **keep the Root Directory set to the repository root (`./`)** in the Vercel project settings. This enables Vercel to install all workspace dependencies, link `@dodo/checkout-sdk`, and execute the builds properly.
+
+### Checkout Application Project
+* **Root Directory:** `./` (Repository root)
+* **Framework Preset:** `Vite`
+* **Build Command:** `npm run build --workspace=@dodo/checkout` (or `npm run build:checkout`)
+* **Output Directory:** `apps/checkout/dist`
+* **Install Command:** `npm install`
+
+### Demo Store Application Project
+* **Root Directory:** `./` (Repository root)
+* **Framework Preset:** `Vite`
+* **Build Command:** `npm run build --workspace=@dodo/demo` (or `npm run build:demo`)
+* **Output Directory:** `apps/demo/dist`
+* **Install Command:** `npm install`
+
+*(Note: Pre-configured [`apps/checkout/vercel.json`](file:///C:/Users/golus/Desktop/dodo-checkout/apps/checkout/vercel.json) and [`apps/demo/vercel.json`](file:///C:/Users/golus/Desktop/dodo-checkout/apps/demo/vercel.json) files are included in the repository).*
+
+---
+
 ## 6. How the Checkout SDK Works
 
 The SDK (`@dodo/checkout-sdk`) provides a minimal, clean, and declarative API:
